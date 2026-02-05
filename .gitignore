@@ -1,0 +1,20 @@
+# === .NET ===
+[Bb]in/
+[Ob]j/
+out/
+publish/
+.vscode/
+.vs/
+*.user
+*.userosscache
+*.sln.doccache
+
+# === Docker ===
+.dockerignore
+.env
+
+reports/*.csv
+mysql_data/
+
+.DS_Store
+Thumbs.db

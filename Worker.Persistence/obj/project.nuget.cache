@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "/L8yPs7EcQg=",
+  "success": true,
+  "projectFilePath": "/Users/orhangezginci/development/RabbitMqDemo/Worker.Persistence/Worker.Persistence.csproj",
+  "expectedPackageFiles": [
+    "/Users/orhangezginci/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.1/microsoft.extensions.logging.abstractions.7.0.1.nupkg.sha512",
+    "/Users/orhangezginci/.nuget/packages/mysqlconnector/2.3.5/mysqlconnector.2.3.5.nupkg.sha512",
+    "/Users/orhangezginci/.nuget/packages/rabbitmq.client/6.8.1/rabbitmq.client.6.8.1.nupkg.sha512",
+    "/Users/orhangezginci/.nuget/packages/system.memory/4.5.5/system.memory.4.5.5.nupkg.sha512",
+    "/Users/orhangezginci/.nuget/packages/system.threading.channels/7.0.0/system.threading.channels.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

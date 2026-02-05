@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmqMs
+    ports:
+      - "5672:5672"    # Port für die App-Kommunikation
+      - "15672:15672"  # Port für das Web-Dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+  worker-reports:
+    build:
+      context: ./Worker.Reports
+    container_name: worker-reports
+    environment:
+      - MessageBroker__HostName=rabbitmqMs
+    volumes:
+      - ./reports:/app/reports  # Synchronisiert Container-Ordner mit Lokal-Ordner
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+  core-api:
+    build:
+      context: ./Core.Api
+    container_name: core-api
+    ports:
+      - "8080:8080"
+    environment:
+      - MessageBroker__HostName=rabbitmqMs
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: appdb
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  worker-persistence:
+    build:
+      context: ./Worker.Persistence
+    container_name: worker-persistence
+    environment:
+      - MessageBroker__HostName=rabbitmqMs
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=appdb;Uid=root;Pwd=rootpassword;
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+  adminer:
+    image: adminer
+    container_name: database-gui
+    restart: always
+    ports:
+      - "8085:8080"
+    networks:
+      - app-network   
+networks:
+  app-network:
+    driver: bridge
