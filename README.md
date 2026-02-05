@@ -282,16 +282,11 @@ Timestamp,EventId,EventType,Payload
 #### Single Event
 
 ```bash
-curl -X POST http://localhost:8080/data \
+curl -i -X POST http://localhost:8080/data \
   -H "Content-Type: application/json" \
   -d '{
-    "eventType": "OrderCreated",
-    "payload": {
-      "orderId": 12345,
-      "customerId": "cust-001",
-      "amount": 299.99,
-      "items": ["SKU-001", "SKU-002"]
-    }
+    "Name": "Sensor_Alpha",
+    "Value": "95.5"
   }'
 ```
 
@@ -302,16 +297,10 @@ curl -X POST http://localhost:8080/data \
 for i in {1..100}; do
   curl -s -X POST http://localhost:8080/data \
     -H "Content-Type: application/json" \
-    -d "{
-      \"eventType\": \"LoadTest\",
-      \"payload\": {
-        \"iteration\": $i,
-        \"timestamp\": \"$(date -Iseconds)\"
-      }
-    }" &
+    -d "{\"Name\": \"LoadTest_$i\", \"Value\": \"$RANDOM\"}" &
 done
 wait
-echo "Sent 100 events"
+echo "Loadtest beendet."
 ```
 
 #### High-Volume Load Test (1000 Events with xargs)
@@ -319,7 +308,7 @@ echo "Sent 100 events"
 ```bash
 seq 1 1000 | xargs -P 50 -I {} curl -s -X POST http://localhost:8080/data \
   -H "Content-Type: application/json" \
-  -d '{"eventType":"StressTest","payload":{"id":{}}}'
+  -d "{\"Name\": \"LoadTest_$i\", \"Value\": \"$RANDOM\"}"
 ```
 
 ---
