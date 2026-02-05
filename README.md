@@ -282,7 +282,7 @@ Timestamp,EventId,EventType,Payload
 #### Single Event
 
 ```bash
-curl -X POST http://localhost:8080/api/events \
+curl -X POST http://localhost:8080/data \
   -H "Content-Type: application/json" \
   -d '{
     "eventType": "OrderCreated",
@@ -300,7 +300,7 @@ curl -X POST http://localhost:8080/api/events \
 ```bash
 # Bash loop for load testing
 for i in {1..100}; do
-  curl -s -X POST http://localhost:8080/api/events \
+  curl -s -X POST http://localhost:8080/data \
     -H "Content-Type: application/json" \
     -d "{
       \"eventType\": \"LoadTest\",
@@ -317,7 +317,7 @@ echo "Sent 100 events"
 #### High-Volume Load Test (1000 Events with xargs)
 
 ```bash
-seq 1 1000 | xargs -P 50 -I {} curl -s -X POST http://localhost:8080/api/events \
+seq 1 1000 | xargs -P 50 -I {} curl -s -X POST http://localhost:8080/data \
   -H "Content-Type: application/json" \
   -d '{"eventType":"StressTest","payload":{"id":{}}}'
 ```
